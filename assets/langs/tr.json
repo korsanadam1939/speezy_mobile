@@ -1,0 +1,7 @@
+{
+  "app_title": "Speezy Uygulaması",
+  "login_title": "Giriş Yap",
+  "login_button": "Giriş Yap",
+  "login_input_hint_email" : "E-mail2",
+  "login_input_hint_password" : "Sifre"
+}
