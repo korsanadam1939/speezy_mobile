@@ -1,11 +1,18 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:either_dart/either.dart';
+import 'package:speezy_mobile/models/eror_model.dart';
 import 'package:speezy_mobile/services/storage_service.dart';
+import 'package:speezy_mobile/utils/preference_keys.dart';
+
+import '../models/user-model.dart';
 
 class AuthService {
   final StorageService _storageService;
   final Dio _dio = Dio();
-  final String _baseUrl = 'https://5000-idx-speezy-1744655613575.cluster-jbb3mjctu5cbgsi6hwq6u4btwe.cloudworkstations.dev/api/auth/login';
+
 
   AuthService(this._storageService);
 
@@ -13,49 +20,35 @@ class AuthService {
 
   bool get isLoggedIn => _isLoggedIn;
 
-  Future<Map<String?, String?>?> login({required String email, required String password}) async {
 
 
+  Future<User?> login(String email, String password) async {
     try {
-      final response = await _dio.post("https://5000-idx-speezy-1744655613575.cluster-jbb3mjctu5cbgsi6hwq6u4btwe.cloudworkstations.dev/api/auth/login", data: {
+      final response = await _dio.post("${PreferenceKeys.baseUrl}/login", data: {
         'email': email,
         'password': password,
       });
 
       if (response.statusCode == 200) {
-        String? accestoken = response.data['data']['accessToken'];
-        String? refresstoken = response.data['data']['refreshToken'];
-        String? username = response.data['data']['user']['username'];
-
-
-
-
-        if(accestoken != null || refresstoken != null) {
-
-          return {
-            "accestoken" : accestoken,
-            "refresstoken" : refresstoken,
-            "username" : username
-
-          };
-        }
-
-
-      }
-
-      else {
-
-        throw Exception('Login failed');
+        final data = response.data;
+        final user = User.fromJson(data['data']['user']);
+        print(user.username);
+        await _storageService.saveToken(refreshtoken: data['data']['refreshToken']);
+        await _storageService.saveUser(user);
+        return user;
+      } else {
         return null;
       }
-    }catch(e) {
 
-      // Handle error
+    } catch (e) {
+
+      return null;
     }
-    _isLoggedIn = true;
   }
 
-  Future<Map<String, dynamic>> register({
+
+
+  Future<ErrorModel?> register({
     required String username,
     required String email,
     required String password,
@@ -70,39 +63,22 @@ class AuthService {
         },
         options: Options(
           validateStatus: (status) {
-            // 500 ve üstü hariç tüm status kodlarını response olarak kabul et
+
             return status != null && status < 500;
           },
         ),
       );
-
-      // Eğer 400 dönerse ve success false ise
       if (response.statusCode == 400) {
-        return {
-          "durum": false,
-          "error": response.data["message"] ?? "Bilinmeyen bir hata oluştu.",
-        };
+        final error = ErrorModel.fromJson(response.data);
+        return error;
       }
-
-      // Eğer 200/201 ise başarılı
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return {
-          "durum": true,
-          "data": response.data,
-        };
+        return null;
       }
-
-      // Diğer durumlar
-      return {
-        "durum": false,
-        "error": "Beklenmeyen bir hata oluştu. Kod: ${response.statusCode}",
-      };
+      return ErrorModel(message: "Beklenmeyen bir hata oluştu");
     } catch (e) {
       print('Register error: $e');
-      return {
-        "durum": false,
-        "error": "Bir hata oluştu: $e",
-      };
+      return ErrorModel(message: e.toString());
     }
   }
 
@@ -116,13 +92,12 @@ class AuthService {
           "email": email,
         },
         options: Options(
-          contentType: Headers.jsonContentType, // <-- bunu da ekleyelim
+          contentType: Headers.jsonContentType,
           validateStatus: (status) {
             return status != null && status < 500;
           },
         ),
       );
-
       if (response.statusCode == 400) {
         return false;
       }
@@ -138,7 +113,7 @@ class AuthService {
     }
   }
 
-  Future<Map<String, dynamic>> changethepassword({
+  Future<bool> changethepassword({
 
     required String email,
     required String code,
@@ -163,31 +138,19 @@ class AuthService {
 
       // Eğer 400 dönerse ve success false ise
       if (response.statusCode == 400) {
-        return {
-          "durum": false,
-          "error": response.data["message"] ?? "Bilinmeyen bir hata oluştu.",
-        };
+        return false;
       }
 
       // Eğer 200/201 ise başarılı
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return {
-          "durum": true,
-          "data": response.data,
-        };
+        return true;
       }
 
       // Diğer durumlar
-      return {
-        "durum": false,
-        "error": "Beklenmeyen bir hata oluştu. Kod: ${response.statusCode}",
-      };
+     return false;
     } catch (e) {
       print('Register error: $e');
-      return {
-        "durum": false,
-        "error": "Bir hata oluştu: $e",
-      };
+      return false;
     }
   }
 
@@ -199,6 +162,7 @@ class AuthService {
 
 
   void logout() {
+
     _isLoggedIn = false;
   }
 }

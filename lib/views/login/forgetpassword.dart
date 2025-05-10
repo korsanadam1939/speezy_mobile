@@ -14,9 +14,12 @@ class Forgetpassword extends StatefulWidget {
 }
 
 class _ForgetpasswordState extends State<Forgetpassword> {
+  bool errorMail = false;
   var tfemail = TextEditingController();
   @override
   Widget build(BuildContext context) {
+
+    final viewModel = Provider.of<AuthViewModel>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -36,12 +39,27 @@ class _ForgetpasswordState extends State<Forgetpassword> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: SpeezyInput(label: "Mail adresinizi giriniz",hintText: "E-posta",controller:tfemail ,),
+                child: SpeezyInput(label: "Mail adresinizi giriniz",hintText: "E-posta",controller:tfemail ,onChanged: (value){
+                  if(value.isEmpty){
+                    setState(() {
+                      errorMail = true;
+                    });
+                  }
+                  else if(value.isNotEmpty){
+                    if(errorMail ==true){
+                      setState(() {
+                        errorMail =false;
+                      });
+
+                    }
+
+                  }
+                },error: "Şifre boş bırakılamaz",erorControl: errorMail,),
               ),
               SpeezyButton(text: "kodu gönder",color: Colors.indigoAccent, onPressed: ()  {
                forgetpassword();
 
-              })
+              },isLoading: viewModel.isLoading)
             ],
           ),
         ),
@@ -59,7 +77,7 @@ class _ForgetpasswordState extends State<Forgetpassword> {
 
 
     if(durum==true){
-      context.go("/resetpassword");
+      context.push("/resetpassword");
     }
     else{
       showDialog(

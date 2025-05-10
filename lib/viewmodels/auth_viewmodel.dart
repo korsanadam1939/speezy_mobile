@@ -1,13 +1,17 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:speezy_mobile/models/user.dart';
+import 'package:speezy_mobile/models/eror_model.dart';
 
+
+import '../models/user-model.dart';
 import '../services/auth_service.dart';
 import '../services/storage_service.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final StorageService _storageService;
   final AuthService _authService;
+  bool isLoading = false;
 
 
 
@@ -16,8 +20,8 @@ class AuthViewModel extends ChangeNotifier {
   }
   Future<void> init() async{
 
-    List<String?> token =await _storageService.getToken();
-    if(token[0] != null && token.isNotEmpty && token[1] != null){
+    String? token =await _storageService.getToken();
+    if(token != null){
       _isLoggedIn = true;
       notifyListeners();
     }
@@ -25,66 +29,73 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   bool _isLoggedIn = false;
+  User? _user;
+  String? errorMessage;
 
   bool get isLoggedIn => _isLoggedIn;
+  User? get user => _user;
 
-  Future<String?> login({required context ,required String email, required String password}) async{
+  Future<bool> login({required context, required String email, required String password}) async {
+    isLoading = true;
+    notifyListeners();
 
+    User? result = await _authService.login(email, password);
 
-    Map<String?, String?>? informations = await _authService.login(email: email, password: password);
+    isLoading = false;
 
-    String? accesstoken =informations?["accestoken"];
-    String? refreshtoken =informations?["refresstoken"];
-    String? username =informations?["username"];
-    String? email2 =informations?["username"];
-
-
-    _isLoggedIn = true;
-    if(refreshtoken!= null && accesstoken!= null){
-
-      _storageService.saveToken(accestoken: accesstoken, refreshtoken: refreshtoken);
-
-      Provider.of<UserProvider>(context, listen: false)
-          .saveUser(username ?? 'veri yok', email);
-
-
-      return accesstoken;
-
+    if (result != null) {
+      _user =result;
+      _isLoggedIn = true;
+      notifyListeners();
+      return true;
+    } else {
+      notifyListeners();
+      return false;
     }
 
-
-    return null;
-
-
-    notifyListeners();
   }
 
-  Future<Map<String?, dynamic>?> register({required String username,required String email, required String password}) async{
-
-    Map<String?, dynamic>? yanit =await _authService.register(email: email,username: username, password: password);
 
 
-    return yanit;
-
+  Future<ErrorModel?> register({required String username,required String email, required String password}) async{
+    isLoading =true;
     notifyListeners();
+    var message =await _authService.register(email: email,username: username, password: password);
+
+
+    isLoading =false;
+    notifyListeners();
+
+    return message;
+
+
 
   }
 
   Future<bool> sendcode({required String email}) async{
+    isLoading = true;
+    notifyListeners();
 
-    bool yanit =await _authService.sendcode(email: email);
+    bool isSend =await _authService.sendcode(email: email);
 
+    isLoading =false;
+    notifyListeners();
 
-    return yanit;
+    return isSend;
 
 
   }
-  Future<Map<String?, dynamic>?> changethepassword({required String email,required String code, required String password}) async{
+  Future<bool> changethepassword({required String email,required String code, required String password}) async{
+    isLoading =true;
+    notifyListeners();
 
-    Map<String?, dynamic>? yanit =await _authService.changethepassword(email: email, code: code, password: password);
+    bool isChange =await _authService.changethepassword(email: email, code: code, password: password);
 
 
-    return yanit;
+    isLoading =false;
+    notifyListeners();
+
+    return isChange;
 
 
 
@@ -94,6 +105,14 @@ class AuthViewModel extends ChangeNotifier {
     _storageService.clearToken();
     notifyListeners();
   }
+
+  Future<void> loadUser() async{
+    _user =await _storageService.loadUser();
+    notifyListeners();
+
+
+
+}
 
 
 

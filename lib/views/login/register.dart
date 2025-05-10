@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:speezy_mobile/models/eror_model.dart';
 
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../widgets/speezy_button.dart';
@@ -18,9 +19,16 @@ class _RegisterState extends State<Register> {
   var tfeposta =TextEditingController();
   var tfusername =TextEditingController();
   var tfsifre =TextEditingController();
+  late bool errorMail =false ;
+  late bool errorPassword=false ;
+  late bool errorusername=false ;
+
+
   var scaffoldKey = GlobalKey<ScaffoldState>();
+  bool buttonactive = true;
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<AuthViewModel>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -41,16 +49,61 @@ class _RegisterState extends State<Register> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: SpeezyInput(label:"E-mail ",hintText: "E-mail",controller: tfeposta,),
+                child: SpeezyInput(label:"E-mail ",hintText: "E-mail",controller: tfeposta,onChanged: (value){
+                  if(value.isEmpty){
+                    setState(() {
+                      errorMail = true;
+                    });
+                  }
+                  else if(value.isNotEmpty){
+                    if(errorMail ==true){
+                      setState(() {
+                        errorMail =false;
+                      });
+
+                    }
+
+                  }
+                },error: "Mail boş bırakılamaz",erorControl: errorMail),
               ),
 
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: SpeezyInput(label:"kullanıcı adı ",hintText: "Kullanıcı adı",controller: tfusername,),
+                child: SpeezyInput(label:"kullanıcı adı ",hintText: "Kullanıcı adı",controller: tfusername,onChanged: (value){
+                  if(value.isEmpty){
+                    setState(() {
+                      errorusername = true;
+                    });
+                  }
+                  else if(value.isNotEmpty){
+                    if(errorusername ==true){
+                      setState(() {
+                        errorusername =false;
+                      });
+
+                    }
+
+                  }
+                },error: "kullanıcı adı boş bırakılamaz",erorControl: errorusername),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: SpeezyInput(label: "şifrenizi gir",hintText: "Şifre",controller: tfsifre,obscureText: true,),
+                child: SpeezyInput(label: "şifrenizi gir",hintText: "Şifre",controller: tfsifre,obscureText: true,onChanged: (value){
+                  if(value.isEmpty){
+                    setState(() {
+                      errorPassword = true;
+                    });
+                  }
+                  else if(value.isNotEmpty){
+                    if(errorPassword ==true){
+                      setState(() {
+                        errorPassword =false;
+                      });
+
+                    }
+
+                  }
+                },error: "Şifre 5 ile 15 haneli olmalıdır",erorControl: errorPassword),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
@@ -60,8 +113,9 @@ class _RegisterState extends State<Register> {
 
 
 
-                }),
+                },isLoading: viewModel.isLoading),
               ),
+
 
               TextButton(onPressed: (){
                 context.go("/login");
@@ -84,12 +138,12 @@ class _RegisterState extends State<Register> {
   Future<void> register() async{
     if(tfusername.text.isNotEmpty && tfeposta.text.isNotEmpty && tfsifre.text.isNotEmpty){
 
-      Map<String?, dynamic>? yanit =await Provider.of<AuthViewModel>(context, listen: false).register(username: tfusername.text, email: tfeposta.text, password: tfsifre.text);
+      var errorMesage =await Provider.of<AuthViewModel>(context, listen: false).register(username: tfusername.text, email: tfeposta.text, password: tfsifre.text);
 
 
-      print(yanit?["durum"]);
+      print(errorMesage?.message);
 
-      if (yanit?["durum"] == true) {
+      if (errorMesage?.message == null) {
         print("kullanıcı başarıyla kaydedildi");
 
         showDialog(
@@ -119,7 +173,7 @@ class _RegisterState extends State<Register> {
           },
         );
       }
-      else if(yanit?["durum"] == false){
+      else if(errorMesage?.message !=null){
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -130,7 +184,7 @@ class _RegisterState extends State<Register> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.error,color: Colors.redAccent,size: 100,),
-                  Text(yanit?["error"])
+                  Text(errorMesage?.message ??"hata")
                 ],
               ),
 

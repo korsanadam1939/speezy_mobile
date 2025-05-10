@@ -1,10 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speezy_mobile/services/auth_service.dart';
 import 'package:speezy_mobile/views/login/register.dart';
+import 'package:speezy_mobile/widgets/Alertdialog.dart';
 import 'package:speezy_mobile/widgets/speezy_button.dart';
 import 'package:speezy_mobile/widgets/speezy_input.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -22,13 +24,17 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+
   var tfeposta =TextEditingController();
   var tfsifre =TextEditingController();
+  late bool errorMail =false ;
+  late bool errorPassword=false ;
   var scaffoldKey = GlobalKey<ScaffoldState>();
   @override
 
 
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<AuthViewModel>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -50,21 +56,51 @@ class _LoginViewState extends State<LoginView> {
               //SizedBox(width:150,child: Image.asset("assets/images/fox.png")),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: SpeezyInput(label:"E-mail ",hintText: "E-mail",controller: tfeposta,),
+                child: SpeezyInput(label:"E-mail ",hintText: "E-mail",controller: tfeposta,onChanged: (value){
+                  if(value.isEmpty){
+                    setState(() {
+                      errorMail = true;
+                    });
+                  }
+                  else if(value.isNotEmpty){
+                    if(errorMail ==true){
+                      setState(() {
+                        errorMail =false;
+                      });
+
+                    }
+
+                  }
+                },error: "Mail boş bırakılamaz",erorControl: errorMail,),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: SpeezyInput(label: "şifrenizi gir",hintText: "Şifre",controller: tfsifre,obscureText: true,),
+                child: SpeezyInput(label: "şifrenizi gir",hintText: "Şifre",controller: tfsifre,obscureText: true,onChanged: (value){
+                  if(value.isEmpty){
+                    setState(() {
+                      errorPassword = true;
+                    });
+                  }
+                  else if(value.isNotEmpty){
+                    if(errorPassword ==true){
+                      setState(() {
+                        errorPassword =false;
+                      });
+
+                    }
+
+                  }
+                },error: "Şifre boş bırakılamaz",erorControl: errorPassword,),
               ),
 
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: SpeezyButton(text: "Giriş yap",color: Colors.indigoAccent, onPressed: () async{
+                child: SpeezyButton(isLoading: viewModel.isLoading,text: "Giriş yap",color: Colors.indigoAccent, onPressed: () async{
                   await login();
 
 
 
-                }),
+                },),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -75,7 +111,7 @@ class _LoginViewState extends State<LoginView> {
 
                   }, child: Text("Hesabınmı yok ?",style: TextStyle(color: Colors.indigoAccent),),),
                   TextButton(onPressed: (){
-                    context.go("/forgetpossword");
+                    context.push("/forgetpossword");
 
 
                   }, child: Text("Şifrenimi unuttun ?",style: TextStyle(color: Colors.black),),)
@@ -97,16 +133,23 @@ class _LoginViewState extends State<LoginView> {
   Future<void> login() async{
 
 
-    String? token=await Provider.of<AuthViewModel>(context, listen: false).login(context:context,email: tfeposta.text,password: tfsifre.text);
-
-
-    print(token);
-
-    if(token != null){
+    bool islogin =await Provider.of<AuthViewModel>(context, listen: false).login(context:context,email: tfeposta.text,password: tfsifre.text);
+    print(islogin);
+    if(islogin){
       context.go("/bottom");
+    }else{
+      showDialog(context: context, builder: (BuildContext context){
 
+        return CustomAlertDialog(title: 'hata',icon:Icons.error,content: "Geçersiz kimlik bilgileri", onConfirm: () {
+          context.pop();
+        }, onCancel: () {
+          context.pop();
+        },);
+
+      });
 
     }
+
 
 
   }

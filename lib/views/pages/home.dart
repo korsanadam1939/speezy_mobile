@@ -4,7 +4,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:speezy_mobile/widgets/gosterge.dart';
 
-import '../../models/user.dart';
+
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -16,7 +16,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
+
     double screenHeight = MediaQuery.of(context).size.height;
     double progressValue = 0.2;
 
@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Row(
                     children: [
-                      Expanded(child: Gosterge(title: "${userProvider.username}", progressValue: 0.2, ovallik: 10,height: screenHeight/7.5,)),
+                      Expanded(child: Gosterge(title: "Merhaba erdem", progressValue: 0.2, ovallik: 10,height: screenHeight/7.5,)),
                     ],
                   ),
                 ),

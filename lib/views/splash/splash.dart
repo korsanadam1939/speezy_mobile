@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../models/user.dart';
+
 import '../../viewmodels/auth_viewmodel.dart';
 
 class SplashView extends StatefulWidget {
@@ -23,8 +23,8 @@ class _SplashViewState extends State<SplashView> {
 
     final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
     if (authViewModel.isLoggedIn) {
-      Provider.of<UserProvider>(context, listen: false)
-          .loadUser();
+     await authViewModel.loadUser();
+
       context.go('/bottom');
     } else {
       context.go('/login');

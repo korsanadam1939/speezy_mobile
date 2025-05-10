@@ -4,7 +4,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../models/user.dart';
+
 import '../viewmodels/auth_viewmodel.dart';
 import '../widgets/bottombor.dart';
 
@@ -18,7 +18,8 @@ class profile extends StatefulWidget {
 class _profileState extends State<profile> {
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
+
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.white,
       //bottomNavigationBar: const MyBottomNavBar(currentIndex: 2),
@@ -42,7 +43,7 @@ class _profileState extends State<profile> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(bottom: 5),
-                          child: Text(userProvider.username,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
+                          child: Text(authViewModel.user?.username ?? "",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,7 +64,7 @@ class _profileState extends State<profile> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'A1',
+                                    authViewModel.user!.level!,
                                     style: TextStyle(color: Colors.black),
                                   ),
                                 ),
@@ -83,7 +84,7 @@ class _profileState extends State<profile> {
                               ),
                               child: Center(
                                 child: Text(
-                                  'çaylak',
+                                  authViewModel.user?.rank ?? "",
                                   style: TextStyle(color: Colors.black),
                                 ),
                               ),

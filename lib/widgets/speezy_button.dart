@@ -9,6 +9,7 @@ class SpeezyButton extends StatelessWidget {
   final EdgeInsets? padding;
   final double borderRadius;
   final bool isExpanded;
+  final bool isLoading;
 
 
   const SpeezyButton({
@@ -21,6 +22,7 @@ class SpeezyButton extends StatelessWidget {
     this.padding,
     this.borderRadius = 12,
     this.isExpanded = true,
+    this.isLoading =false,
   });
 
   @override
@@ -29,17 +31,33 @@ class SpeezyButton extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (icon != null) Icon(icon, color: textColor),
-        if (icon != null) const SizedBox(width: 8),
-        Text(
-          text,
-          style: TextStyle(
-            color: textColor ?? Colors.white,
-            fontWeight: FontWeight.bold,
+        if (isLoading)
+          SizedBox(
+
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              color: textColor ?? Colors.white,
+              strokeWidth: 2,
+              backgroundColor: Colors.grey[300],
+
+            ),
+
+          )
+        else ...[
+          if (icon != null) Icon(icon, color: textColor),
+          if (icon != null) const SizedBox(width: 8),
+          Text(
+            text,
+            style: TextStyle(
+              color: textColor ?? Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
+        ],
       ],
     );
+
 
     final button = ElevatedButton(
 
@@ -51,7 +69,8 @@ class SpeezyButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
         ),
       ),
-      onPressed: onPressed,
+
+      onPressed: isLoading?null:onPressed,
       child: child,
     );
 

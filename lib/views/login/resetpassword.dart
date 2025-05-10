@@ -19,8 +19,10 @@ class _ResetpasswordState extends State<Resetpassword> {
   var tfmail = TextEditingController();
   var tfcode = TextEditingController();
   var tfpassword = TextEditingController();
+  late bool errorCode = false;
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<AuthViewModel>(context);
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -45,7 +47,22 @@ class _ResetpasswordState extends State<Resetpassword> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
-                  child: SpeezyInput(label: "mailinize gelen kodu giriniz",hintText: "Kod",controller: tfcode,),
+                  child: SpeezyInput(label: "mailinize gelen kodu giriniz",hintText: "Mailine gelen 4 haneli kodu gir",controller: tfcode,onChanged: (value){
+                    if(value.length !=6 ){
+                      setState(() {
+                        errorCode = true;
+                      });
+                    }
+                    else if(value.length == 6){
+                      if(errorCode ==true){
+                        setState(() {
+                          errorCode =false;
+                        });
+
+                      }
+
+                    }
+                  },error: "Şifre boş bırakılamaz",erorControl: errorCode,),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
@@ -53,7 +70,7 @@ class _ResetpasswordState extends State<Resetpassword> {
                 ),
                 SpeezyButton(text: "Şifreyi değiştir",color: Colors.indigoAccent, onPressed: (){
                   changepassword();
-                })
+                },isLoading: viewModel.isLoading,)
               ],
             ),
           ),
@@ -62,14 +79,15 @@ class _ResetpasswordState extends State<Resetpassword> {
     );
   }
   Future<void> changepassword() async{
-    if(tfmail.text.isNotEmpty && tfcode.text.isNotEmpty && tfpassword.text.isNotEmpty){
 
-      Map<String?, dynamic>? yanit =await Provider.of<AuthViewModel>(context, listen: false).changethepassword(email: tfmail.text, code: tfcode.text, password: tfpassword.text);
+    if(tfmail.text.isNotEmpty && tfcode.text.length == 6 && tfpassword.text.isNotEmpty){
+
+      bool isChange =await Provider.of<AuthViewModel>(context, listen: false).changethepassword(email: tfmail.text, code: tfcode.text, password: tfpassword.text);
 
 
-      print(yanit?["durum"]);
+      print(isChange);
 
-      if (yanit?["durum"] == true) {
+      if (isChange == true) {
         print("kullanıcı başarıyla kaydedildi");
 
         showDialog(
@@ -81,8 +99,11 @@ class _ResetpasswordState extends State<Resetpassword> {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Iconsax.tick_circle,color: Colors.redAccent,size: 100,),
-                  Text("kullanıcı başarıyla kaydedildi")
+                  Icon(Iconsax.tick_circle,color: Colors.greenAccent,size: 100,),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text("Şifre başarılıyla değiştirildi!"),
+                  )
                 ],
               ),
 
@@ -99,7 +120,7 @@ class _ResetpasswordState extends State<Resetpassword> {
           },
         );
       }
-      else if(yanit?["durum"] == false){
+      else if(isChange == false){
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -109,8 +130,8 @@ class _ResetpasswordState extends State<Resetpassword> {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.error,color: Colors.green,size: 100,),
-                  Text(yanit?["error"])
+                  Icon(Icons.error,color: Colors.redAccent,size: 100,),
+                  Text("kod yanlış")
                 ],
               ),
 

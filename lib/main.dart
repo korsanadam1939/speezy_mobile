@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:speezy_mobile/models/user.dart';
+
 import 'package:speezy_mobile/providers/theme_provider.dart';
 import 'package:speezy_mobile/services/auth_service.dart';
 import 'package:speezy_mobile/services/shared_preferences_service.dart';
@@ -34,7 +34,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => SharedPreferencesService()),
         ChangeNotifierProvider(
           create: (context) {

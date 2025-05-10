@@ -14,6 +14,8 @@ class SpeezyInput extends StatelessWidget {
   final int maxLines;
   final bool enabled;
   final FocusNode? focusNode;
+  final String? error;
+  final bool erorControl;
 
   const SpeezyInput({
     super.key,
@@ -30,12 +32,16 @@ class SpeezyInput extends StatelessWidget {
     this.maxLines = 1,
     this.enabled = true,
     this.focusNode,
+    this.error,
+    this.erorControl = false,
+
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+
       keyboardType: keyboardType,
       obscureText: obscureText,
       validator: validator,
@@ -47,6 +53,8 @@ class SpeezyInput extends StatelessWidget {
       decoration: InputDecoration(
         //labelText: label,
         hintText: hintText,
+        error:erorControl ? Text(error!,style: TextStyle(color: Colors.redAccent),) : null ,
+
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         border: OutlineInputBorder(
