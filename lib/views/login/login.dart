@@ -1,159 +1,161 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:speezy_mobile/services/auth_service.dart';
-import 'package:speezy_mobile/views/login/register.dart';
-import 'package:speezy_mobile/widgets/Alertdialog.dart';
 import 'package:speezy_mobile/widgets/speezy_button.dart';
 import 'package:speezy_mobile/widgets/speezy_input.dart';
-import 'package:easy_localization/easy_localization.dart';
-import '../../services/shared_preferences_service.dart';
-import '../../services/storage_service.dart';
+
 import '../../viewmodels/auth_viewmodel.dart';
+import '../../widgets/Alertdialog.dart';
 
-
-
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
-}
-
-class _LoginViewState extends State<LoginView> {
-
-  var tfeposta =TextEditingController();
-  var tfsifre =TextEditingController();
-  late bool errorMail =false ;
-  late bool errorPassword=false ;
-  var scaffoldKey = GlobalKey<ScaffoldState>();
-  @override
-
-
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<AuthViewModel>(context);
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background image
+          Image.asset('assets/images/mim.jpg', fit: BoxFit.cover),
 
+          // Overlay color (optional)
+          Container(color: Colors.black.withOpacity(0.3)),
 
-
-        backgroundColor: Colors.white ,
-
-        title: Text("Giriş yap",style: TextStyle(color: Colors.black,fontSize: 24),),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Column(
-
-            //mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              //SizedBox(width:150,child: Image.asset("assets/images/fox.png")),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: SpeezyInput(label:"E-mail ",hintText: "E-mail",controller: tfeposta,onChanged: (value){
-                  if(value.isEmpty){
-                    setState(() {
-                      errorMail = true;
-                    });
-                  }
-                  else if(value.isNotEmpty){
-                    if(errorMail ==true){
-                      setState(() {
-                        errorMail =false;
-                      });
-
-                    }
-
-                  }
-                },error: "Mail boş bırakılamaz",erorControl: errorMail,),
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.95),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Giriş yap',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineSmall?.copyWith(
+                        color: Colors.blue.shade800,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const _LoginForm(),
+                    const SizedBox(height: 12),
+                    TextButton(
+                      onPressed: () {
+                        context.go("/forgetpossword");
+                      },
+                      child: const Text('Şifrenimi unuttun?'),
+                    ),
+                    const Divider(),
+                    TextButton(
+                      onPressed: () {
+                        context.go("/register");
+                      },
+                      child: const Text("Hesabinmi yok? Kaydol"),
+                    ),
+                  ],
+                ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: SpeezyInput(label: "şifrenizi gir",hintText: "Şifre",controller: tfsifre,obscureText: true,onChanged: (value){
-                  if(value.isEmpty){
-                    setState(() {
-                      errorPassword = true;
-                    });
-                  }
-                  else if(value.isNotEmpty){
-                    if(errorPassword ==true){
-                      setState(() {
-                        errorPassword =false;
-                      });
-
-                    }
-
-                  }
-                },error: "Şifre boş bırakılamaz",erorControl: errorPassword,),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: SpeezyButton(isLoading: viewModel.isLoading,text: "Giriş yap",color: Colors.indigoAccent, onPressed: () async{
-                  await login();
-
-
-
-                },),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TextButton(onPressed: (){
-                    context.go("/register");
-
-
-                  }, child: Text("Hesabınmı yok ?",style: TextStyle(color: Colors.indigoAccent),),),
-                  TextButton(onPressed: (){
-                    context.push("/forgetpossword");
-
-
-                  }, child: Text("Şifrenimi unuttun ?",style: TextStyle(color: Colors.black),),)
-
-
-                ],
-              ),
-
-
-
-
-            ],
+            ),
           ),
-        ),
+        ],
       ),
-
     );
   }
-  Future<void> login() async{
-
-
-    bool islogin =await Provider.of<AuthViewModel>(context, listen: false).login(context:context,email: tfeposta.text,password: tfsifre.text);
-    print(islogin);
-    if(islogin){
-      context.go("/bottom");
-    }else{
-      showDialog(context: context, builder: (BuildContext context){
-
-        return CustomAlertDialog(title: 'hata',icon:Icons.error,content: "Geçersiz kimlik bilgileri", onConfirm: () {
-          context.pop();
-        }, onCancel: () {
-          context.pop();
-        },);
-
-      });
-
-    }
-
-
-
-  }
-
-
 }
 
+class _LoginForm extends StatefulWidget {
+  const _LoginForm();
+
+  @override
+  State<_LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<_LoginForm> {
+  final _formKey = GlobalKey<FormState>();
+  var tfeposta = TextEditingController();
+  var tfsifre = TextEditingController();
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void _submit() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      await login();
+      print('Email: ${tfeposta.text}');
+      print('Password: ${tfsifre.text}');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = Provider.of<AuthViewModel>(context);
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SpeezyInput(label :"E-postanızı giriniz",controller :tfeposta ,hintText: "E-postanızı giriniz",validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Email boş olamaz';
+            } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+              return 'Geçerli bir eposta gir';
+            }
+            return null;
+          },),
+          const SizedBox(height: 12),
+          SpeezyInput(controller: tfsifre,obscureText: true,hintText: "Şifrenizi giriniz",validator: (value) {
+            if (value == null || value.isEmpty) return 'Şifre boş';
+            if (value.length < 6) return 'Minimum 6 karekter';
+            return null;
+          },),
+          const SizedBox(height: 16),
+          SpeezyButton(text: "Giriş yap", onPressed: (){
+            _submit();
+          },isLoading: viewModel.isLoading,color: Colors.indigoAccent,)
+        ],
+      ),
+    );
+  }
+  Future<void> login() async {
+    bool islogin = await Provider.of<AuthViewModel>(
+      context,
+      listen: false,
+    ).login(context: context, email: tfeposta.text, password: tfsifre.text);
+    print(islogin);
+    if (islogin) {
+      context.go("/bottom");
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CustomAlertDialog(
+            title: 'hata',
+            icon: Icons.error,
+            content: "Geçersiz kimlik bilgileri",
+            onConfirm: () {
+              context.pop();
+            },
+            onCancel: () {
+              context.pop();
+            },
+          );
+        },
+      );
+    }
+  }
+}

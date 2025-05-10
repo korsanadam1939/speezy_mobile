@@ -7,77 +7,117 @@ import '../../viewmodels/auth_viewmodel.dart';
 import '../../widgets/speezy_button.dart';
 import '../../widgets/speezy_input.dart';
 
-class Resetpassword extends StatefulWidget {
-  const Resetpassword({super.key});
+class ResetPasswordScreen extends StatelessWidget {
+
+  const ResetPasswordScreen({super.key});
 
   @override
-  State<Resetpassword> createState() => _ResetpasswordState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset('assets/images/mim.jpg', fit: BoxFit.cover),
+          Container(color: Colors.black.withOpacity(0.3)),
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.95),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.blue,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'KODU GIR',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineSmall?.copyWith(
+                        color: Colors.blue.shade800,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const _ChangePasswodForm(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-class _ResetpasswordState extends State<Resetpassword> {
+class _ChangePasswodForm extends StatefulWidget {
+  const _ChangePasswodForm();
 
+  @override
+  State<_ChangePasswodForm> createState() => _ChangePasswodFormState();
+}
+
+class _ChangePasswodFormState extends State<_ChangePasswodForm> {
+  final _formKey = GlobalKey<FormState>();
   var tfmail = TextEditingController();
   var tfcode = TextEditingController();
   var tfpassword = TextEditingController();
-  late bool errorCode = false;
+
+  void _submit() {
+    if (_formKey.currentState?.validate() ?? false) {
+      changepassword();
+      print('E-posta: ${tfmail.text}');
+      print('Şifre: ${tfcode.text}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<AuthViewModel>(context);
-
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-
-
-
-          backgroundColor: Colors.white ,
-
-          title: Text("Kodu gir",style: TextStyle(color: Colors.black,fontSize: 24),),
-          centerTitle: true,
-        ),
-        body:Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: SpeezyInput(label: "mailinize gelen kodu giriniz",hintText: "E-posta",controller: tfmail,),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: SpeezyInput(label: "mailinize gelen kodu giriniz",hintText: "Mailine gelen 4 haneli kodu gir",controller: tfcode,onChanged: (value){
-                    if(value.length !=6 ){
-                      setState(() {
-                        errorCode = true;
-                      });
-                    }
-                    else if(value.length == 6){
-                      if(errorCode ==true){
-                        setState(() {
-                          errorCode =false;
-                        });
-
-                      }
-
-                    }
-                  },error: "Şifre boş bırakılamaz",erorControl: errorCode,),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: SpeezyInput(label: "mailinize gelen kodu giriniz",hintText: "Yeni şifre",obscureText: true,controller: tfpassword,),
-                ),
-                SpeezyButton(text: "Şifreyi değiştir",color: Colors.indigoAccent, onPressed: (){
-                  changepassword();
-                },isLoading: viewModel.isLoading,)
-              ],
-            ),
-          ),
-        )
-
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          SpeezyInput(label :"E-postanızı giriniz",controller :tfmail ,hintText: "E-postanızı giriniz",validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Email boş olamaz';
+            } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+              return 'Geçerli bir eposta gir';
+            }
+            return null;
+          },),
+          const SizedBox(height: 12),
+          SpeezyInput(controller: tfcode,hintText: "Şifrenizi giriniz",validator: (value) {
+            if (value == null || value.isEmpty) return 'Kodda boşluk olamaz';
+            if (value.length != 6) return 'kod 6 haneli olmalı';
+            return null;
+          },),
+          const SizedBox(height: 12),
+          SpeezyInput(controller: tfpassword,obscureText: true,hintText: "Şifrenizi giriniz",validator: (value) {
+            if (value == null || value.isEmpty) return 'Şifre boş';
+            if (value.length < 6) return 'Minimum 6 karekter';
+            return null;
+          },),
+          const SizedBox(height: 16),
+          SpeezyButton(text: "Kayıt ol", onPressed: (){
+            _submit();
+          },isLoading: viewModel.isLoading,color: Colors.indigoAccent,),
+        ],
+      ),
     );
   }
+
   Future<void> changepassword() async{
 
     if(tfmail.text.isNotEmpty && tfcode.text.length == 6 && tfpassword.text.isNotEmpty){
@@ -164,5 +204,4 @@ class _ResetpasswordState extends State<Resetpassword> {
 
 
   }
-
 }

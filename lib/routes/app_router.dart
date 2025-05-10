@@ -30,7 +30,7 @@ GoRouter createRouter(AuthViewModel authViewModel) {
       ),
       GoRoute(
         path: '/login',
-        builder: (context, state) => const LoginView(),
+        builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
         path: '/bottom',
@@ -38,7 +38,7 @@ GoRouter createRouter(AuthViewModel authViewModel) {
       ),
       GoRoute(
         path: '/register',
-        builder: (context, state) => const Register(),
+        builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
         path: '/profile',
@@ -54,11 +54,11 @@ GoRouter createRouter(AuthViewModel authViewModel) {
       ),
       GoRoute(
         path: '/forgetpossword',
-        builder: (context, state) => const Forgetpassword(),
+        builder: (context, state) => const ForgetPasswordScreen(),
       ),
       GoRoute(
         path: '/resetpassword',
-        builder: (context, state) => const Resetpassword(),
+        builder: (context, state) => const ResetPasswordScreen(),
       ),
 
     ],

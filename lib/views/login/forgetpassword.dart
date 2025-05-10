@@ -6,69 +6,98 @@ import 'package:speezy_mobile/widgets/speezy_input.dart';
 
 import '../../viewmodels/auth_viewmodel.dart';
 
-class Forgetpassword extends StatefulWidget {
-  const Forgetpassword({super.key});
 
-  @override
-  State<Forgetpassword> createState() => _ForgetpasswordState();
-}
+class ForgetPasswordScreen extends StatelessWidget {
 
-class _ForgetpasswordState extends State<Forgetpassword> {
-  bool errorMail = false;
-  var tfemail = TextEditingController();
+  const ForgetPasswordScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-
-    final viewModel = Provider.of<AuthViewModel>(context);
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-
-
-
-        backgroundColor: Colors.white ,
-
-        title: Text("Şifreyi sıfırla",style: TextStyle(color: Colors.black,fontSize: 24),),
-        centerTitle: true,
-      ),
-      body:Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: SpeezyInput(label: "Mail adresinizi giriniz",hintText: "E-posta",controller:tfemail ,onChanged: (value){
-                  if(value.isEmpty){
-                    setState(() {
-                      errorMail = true;
-                    });
-                  }
-                  else if(value.isNotEmpty){
-                    if(errorMail ==true){
-                      setState(() {
-                        errorMail =false;
-                      });
-
-                    }
-
-                  }
-                },error: "Şifre boş bırakılamaz",erorControl: errorMail,),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset('assets/images/mim.jpg', fit: BoxFit.cover),
+          Container(color: Colors.black.withOpacity(0.3)),
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.95),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: const [
+                    BoxShadow(color: Colors.blue, blurRadius: 5, offset: Offset(0, 3))
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Şifreyi sifirla',
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          color: Colors.blue.shade800,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                        )),
+                    const SizedBox(height: 16),
+                    const _ForgotPasswordForm(),
+                    const SizedBox(height: 12),
+                  ],
+                ),
               ),
-              SpeezyButton(text: "kodu gönder",color: Colors.indigoAccent, onPressed: ()  {
-               forgetpassword();
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
 
-              },isLoading: viewModel.isLoading)
-            ],
-          ),
-        ),
-      )
+class _ForgotPasswordForm extends StatefulWidget {
+  const _ForgotPasswordForm();
 
+  @override
+  State<_ForgotPasswordForm> createState() => _ForgotPasswordFormState();
+}
+
+class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
+  final _formKey = GlobalKey<FormState>();
+  var tfemail = TextEditingController();
+
+  void _submit() {
+    if (_formKey.currentState?.validate() ?? false) {
+      sendCode();
+      print('Reset email sent to: ${tfemail.text}');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = Provider.of<AuthViewModel>(context);
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          SpeezyInput(label :"E-postanızı giriniz",controller :tfemail ,hintText: "E-postanızı giriniz",validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Email boş olamaz';
+            } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+              return 'Geçerli bir eposta gir';
+            }
+            return null;
+          },),
+
+          const SizedBox(height: 16),
+          SpeezyButton(text: "kodu gönder", onPressed: (){
+            _submit();
+          },isLoading: viewModel.isLoading,color: Colors.indigoAccent,)
+        ],
+      ),
     );
   }
 
-  Future<void> forgetpassword() async{
+  Future<void> sendCode() async{
 
 
     bool durum=await Provider.of<AuthViewModel>(context, listen: false).sendcode(email: tfemail.text);
@@ -77,7 +106,7 @@ class _ForgetpasswordState extends State<Forgetpassword> {
 
 
     if(durum==true){
-      context.push("/resetpassword");
+      context.go("/resetpassword");
     }
     else{
       showDialog(
@@ -110,4 +139,5 @@ class _ForgetpasswordState extends State<Forgetpassword> {
 
 
   }
+
 }
