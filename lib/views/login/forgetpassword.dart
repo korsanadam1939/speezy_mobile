@@ -34,12 +34,17 @@ class ForgetPasswordScreen extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Şifreyi sifirla',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: Colors.blue.shade800,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                        )),
+                    Row(
+                      children: [
+                        
+                        Text('Şifreyi sifirla',
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              color: Colors.blue.shade800,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25,
+                            )),
+                      ],
+                    ),
                     const SizedBox(height: 16),
                     const _ForgotPasswordForm(),
                     const SizedBox(height: 12),

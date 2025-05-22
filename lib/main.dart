@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SharedPreferencesService()),
+
         ChangeNotifierProvider(
           create: (context) {
             final storageService = Provider.of<StorageService>(context, listen: false);

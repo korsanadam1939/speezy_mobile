@@ -58,7 +58,7 @@ class LoginScreen extends StatelessWidget {
                     const SizedBox(height: 12),
                     TextButton(
                       onPressed: () {
-                        context.go("/forgetpossword");
+                        context.push("/forgetpossword");
                       },
                       child: const Text('Şifrenimi unuttun?'),
                     ),

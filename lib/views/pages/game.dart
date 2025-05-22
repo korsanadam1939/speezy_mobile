@@ -20,7 +20,7 @@ class _GamescreenState extends State<Gamescreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("Speezy",style: TextStyle(color: Colors.black,fontSize: 24),),
+        title: Text("Oyna",style: TextStyle(color: Colors.black,fontSize: 24,fontWeight: FontWeight.bold),),
         centerTitle: true,
 
 
@@ -28,10 +28,46 @@ class _GamescreenState extends State<Gamescreen> {
       backgroundColor: Colors.white,
       //bottomNavigationBar: const MyBottomNavBar(currentIndex: 2),
 
-      body: Center(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 15 ,right: 15,left: 15),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: Image.asset(
+                  'assets/images/read.png',
 
-        child: Text("oyun")
-      ),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 15,right: 15,left: 15),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: Image.asset(
+                  'assets/images/wordgameimage.png',
+
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          )
+
+
+
+
+        ],
+      )
 
 
     );

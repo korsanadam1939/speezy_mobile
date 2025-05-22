@@ -98,7 +98,7 @@ class _ChangePasswodFormState extends State<_ChangePasswodForm> {
             return null;
           },),
           const SizedBox(height: 12),
-          SpeezyInput(controller: tfcode,hintText: "Şifrenizi giriniz",validator: (value) {
+          SpeezyInput(controller: tfcode,hintText: "Kodunuzu giriniz",validator: (value) {
             if (value == null || value.isEmpty) return 'Kodda boşluk olamaz';
             if (value.length != 6) return 'kod 6 haneli olmalı';
             return null;
