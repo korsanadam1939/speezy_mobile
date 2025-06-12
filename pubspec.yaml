@@ -47,6 +47,8 @@ dependencies:
   google_nav_bar: ^5.0.7
   line_icons: ^2.0.3
   either_dart: ^1.0.0
+  data_connection_checker_tv: ^0.3.5-nullsafety
+  dartz: ^0.10.1
 
 dev_dependencies:
   flutter_test:

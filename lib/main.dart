@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:speezy_mobile/providers/theme_provider.dart';
+import 'package:speezy_mobile/reading/presentation/providers/reading_provider.dart';
 import 'package:speezy_mobile/services/auth_service.dart';
 import 'package:speezy_mobile/services/shared_preferences_service.dart';
 import 'package:speezy_mobile/services/storage_service.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SharedPreferencesService()),
+        ChangeNotifierProvider(create: (_) => ReadingProvider()),
 
         ChangeNotifierProvider(
           create: (context) {

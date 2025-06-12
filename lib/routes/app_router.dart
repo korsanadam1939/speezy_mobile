@@ -6,6 +6,7 @@ import 'package:speezy_mobile/views/pages/home.dart';
 import 'package:speezy_mobile/widgets/bottombor.dart';
 import 'package:speezy_mobile/views/login/register.dart';
 import 'package:speezy_mobile/views/profile.dart';
+import '../reading/presentation/pages/reading_page.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../views/login/login.dart';
 import '../views/splash/splash.dart';
@@ -59,6 +60,10 @@ GoRouter createRouter(AuthViewModel authViewModel) {
       GoRoute(
         path: '/resetpassword',
         builder: (context, state) => const ResetPasswordScreen(),
+      ),
+      GoRoute(
+        path: '/reading',
+        builder: (context, state) => const ReadingPage(),
       ),
 
     ],
