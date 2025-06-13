@@ -14,10 +14,20 @@ class ReadingRemoteDataSourceImpl implements ReadingRemoteDataSource {
 
   @override
   Future<ReadingModel> getStory({required ReadingParams readingParams}) async {
-    final response = await dio.get(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCUuwt1DRn-vYGTyoQrJqyeEpeh_EOju5w',
-      queryParameters: {
-        'api_key': 'if you need',
+    Response? response;
+    response = await dio.post(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCLJ2xXD3bo8EXg6Cpz24ZX7wzUjFxYAWQ',
+      options: Options(headers: {
+        'Content-Type': 'application/json',
+      }),
+      data: {
+        "contents": [
+          {
+            "parts": [
+              {"text": "bana a1 seviye ingilizce bir hikaye ver "}
+            ]
+          }
+        ]
       },
     );
 

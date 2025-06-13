@@ -27,7 +27,7 @@ class _SplashViewState extends State<SplashView> {
 
       context.go('/bottom');
     } else {
-      context.go('/bottom');
+      context.go('/login');
     }
   }
 
