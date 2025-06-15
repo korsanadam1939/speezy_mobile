@@ -17,9 +17,17 @@ class StoryWidget extends StatelessWidget {
     if (story != null) {
       widget = Expanded(
         child: Center(
-          child: Text(
-            story.story,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Text(story.title),
+                Text(
+                  story.story,
+                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ),
         ),
       );

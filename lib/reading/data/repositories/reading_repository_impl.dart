@@ -24,6 +24,7 @@ class ReadingRepositoryImpl implements ReadingRepository {
   Future<Either<Failure, ReadingModel>> getStory(
       {required ReadingParams readingParams}) async {
     if (await networkInfo.isConnected!) {
+      print("internet var");
       try {
         ReadingModel remoteStory =
             await remoteDataSource.getStory(readingParams: readingParams);
@@ -35,6 +36,7 @@ class ReadingRepositoryImpl implements ReadingRepository {
         return Left(ServerFailure(errorMessage: 'This is a server exception'));
       }
     } else {
+      print("internet yok");
       try {
         ReadingModel localReading = await localDataSource.getLastStory();
         return Right(localReading);

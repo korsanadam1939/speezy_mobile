@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import '../../../../../core/errors/exceptions.dart';
 import '../../../../../core/params/params.dart';
@@ -24,7 +26,7 @@ class ReadingRemoteDataSourceImpl implements ReadingRemoteDataSource {
         "contents": [
           {
             "parts": [
-              {"text": "bana a1 seviye ingilizce bir hikaye ver "}
+              {"text": "bana a1 seviye ingilizce çok farklı bir hikaye ver ama sadece hikayeyi ver json formatında title ve story diye ve sadece json veriyi ver başına felan json yazma"}
             ]
           }
         ]
@@ -32,8 +34,20 @@ class ReadingRemoteDataSourceImpl implements ReadingRemoteDataSource {
     );
 
     if (response.statusCode == 200) {
-      return ReadingModel.fromJson(json: response.data);
+      print(response.data);
+      final storyText = response.data['candidates'][0]['content']['parts'][0]['text'];
+      final cleanStoryText = storyText.replaceAll('```json', '').replaceAll('```', '').trim();
+      print("veri tipi ${storyText.runtimeType}");
+
+      print(storyText);
+      var storyJson =jsonDecode(cleanStoryText);
+      print(storyJson);
+
+
+      return ReadingModel.fromJson(json: storyJson);
+
     } else {
+      print("deneme");
       throw ServerException();
     }
 

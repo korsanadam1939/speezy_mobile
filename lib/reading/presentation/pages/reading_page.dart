@@ -1,24 +1,38 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:speezy_mobile/reading/presentation/providers/reading_provider.dart';
-import 'package:speezy_mobile/reading/presentation/widgets/storyWidget.dart';
 
 import '../../../core/errors/failure.dart';
 import '../../business/entities/ReadingEntity.dart';
-
-class ReadingPage extends StatelessWidget {
+import '../providers/reading_provider.dart';
+import '../widgets/storyWidget.dart';
+class ReadingPage extends StatefulWidget {
   const ReadingPage({Key? key}) : super(key: key);
+
+  @override
+  State<ReadingPage> createState() => _ReadingPageState();
+}
+
+class _ReadingPageState extends State<ReadingPage> {
+  @override
+  void initState() {
+    super.initState();
+    // burada provider'ı tetikleyebilirsin
+    Provider.of<ReadingProvider>(context, listen: false).eitherFailureOrStory();
+  }
 
   @override
   Widget build(BuildContext context) {
     ReadingEntity? readingEntity = Provider.of<ReadingProvider>(context).story;
     Failure? failure = Provider.of<ReadingProvider>(context).failure;
-    String? text =readingEntity?.story;
-    return  Scaffold(
+    String? text = readingEntity?.story;
+
+    return Scaffold(
       body: Center(
-        child:Column(
+        child: Column(
           children: [
-            StoryWidget()
+            StoryWidget(),
+
           ],
         ),
       ),

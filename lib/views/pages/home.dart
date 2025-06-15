@@ -317,7 +317,7 @@ class _HomeState extends State<Home> {
             children: [
               GestureDetector(
                 onTap:(){
-                  context.go('/reading');
+                  context.push('/reading');
                 },
                 child: _buildActionButton(
                   icon: Icons.menu_book,
