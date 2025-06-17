@@ -28,6 +28,7 @@ class ReadingRepositoryImpl implements ReadingRepository {
       try {
         ReadingModel remoteStory =
             await remoteDataSource.getStory(readingParams: readingParams);
+        //print(remoteStory.words);
 
         localDataSource.cacheStory(storyToCache: remoteStory);
 

@@ -5,9 +5,11 @@ class ReadingModel extends ReadingEntity {
   const ReadingModel({
     required String story,
     required String title,
+    required Map<String,String> translations,
   }) : super(
           story: story,
           title: title,
+          translations: translations,
 
 
         );
@@ -15,7 +17,8 @@ class ReadingModel extends ReadingEntity {
   factory ReadingModel.fromJson({required Map<String, dynamic> json}) {
     return ReadingModel(
       story: json['story'],
-      title: json['title']
+      title: json['title'],
+      translations: Map<String, String>.from(json['translations']),
     );
   }
 
@@ -23,6 +26,7 @@ class ReadingModel extends ReadingEntity {
     return {
       'story' : story,
       'title' : title,
+      'translations' : translations
     };
   }
 }

@@ -26,7 +26,7 @@ class ReadingRemoteDataSourceImpl implements ReadingRemoteDataSource {
         "contents": [
           {
             "parts": [
-              {"text": "bana a1 seviye ingilizce çok farklı bir hikaye ver ama sadece hikayeyi ver json formatında title ve story diye ve sadece json veriyi ver başına felan json yazma"}
+              {"text": "Bana A1 seviyesinde, çocuklar için uygun, uzun ve basit bir İngilizce hikaye ver. Sonuç sadece geçerli bir JSON formatında olsun ve şu şekilde yapılandırılsın:\n\n{\n  \"title\": \"Hikayenin İngilizce başlığı\",\n  \"story\": \"Hikayenin İngilizce metni\",\n  \"translations\": {\n    \"kelime1\": \"Türkçesi\",\n    \"kelime2\": \"Türkçesi\"\n  }\n}\n\nKurallar:\n- \"story\" içinde geçen İngilizce kelimeleri **tek tek** al ve \"translations\" içinde birebir Türkçe anlamlarını yaz.\n- \"to play\" gibi ifadeleri parçalayıp ayrı ayrı ver. (\"to\": \"-mek için\", \"play\": \"oynamak\")\n- Zamirler, fiiller, zarflar, edatlar (örn. is, to, opens, this, time, good, night) mutlaka yer alsın.\n- JSON dışında hiçbir şey yazma. Açıklama, ```json gibi etiket kullanma."}
             ]
           }
         ]
@@ -38,6 +38,7 @@ class ReadingRemoteDataSourceImpl implements ReadingRemoteDataSource {
       final storyText = response.data['candidates'][0]['content']['parts'][0]['text'];
       final cleanStoryText = storyText.replaceAll('```json', '').replaceAll('```', '').trim();
       print("veri tipi ${storyText.runtimeType}");
+      print(storyText);
 
       print(storyText);
       var storyJson =jsonDecode(cleanStoryText);

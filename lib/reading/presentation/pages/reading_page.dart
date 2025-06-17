@@ -17,7 +17,7 @@ class _ReadingPageState extends State<ReadingPage> {
   @override
   void initState() {
     super.initState();
-    // burada provider'ı tetikleyebilirsin
+
     Provider.of<ReadingProvider>(context, listen: false).eitherFailureOrStory();
   }
 
