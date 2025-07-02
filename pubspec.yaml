@@ -49,6 +49,7 @@ dependencies:
   either_dart: ^1.0.0
   data_connection_checker_tv: ^0.3.5-nullsafety
   dartz: ^0.10.1
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -75,7 +76,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
 
-    - assets/langs/
+
     - assets/images/
   #   - images/a_dot_ham.jpeg
 

@@ -2,7 +2,7 @@ class User {
   final String? id;
   final String? username;
   final String? email;
-  final String? profilePictureUrl;
+  String? profilePictureUrl;
   final String? level;
   final String? rank;
   final int? totalXp;
@@ -18,7 +18,7 @@ class User {
     required this.email,
     required this.level,
     required this.rank,
-    this.profilePictureUrl ="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExODBod2Y0Ym1rZjJxNHRmOWtweW5leHV6eGR2NHdobHEzb2JxMmM5aCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3oFzmkkwfOGlzZ0gxi/200.webp",
+    this.profilePictureUrl ,
     required this.totalXp,
     required this.gems,
     required this.streakCount,

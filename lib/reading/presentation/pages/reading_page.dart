@@ -18,7 +18,9 @@ class _ReadingPageState extends State<ReadingPage> {
   void initState() {
     super.initState();
 
-    Provider.of<ReadingProvider>(context, listen: false).eitherFailureOrStory();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ReadingProvider>().eitherFailureOrStory();
+    });;
   }
 
   @override

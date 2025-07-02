@@ -61,7 +61,7 @@ class StoryWidget extends StatelessWidget {
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
 
-                                  String wordmean = await getword(story.translations, kelime.replaceAll(RegExp(r'[.,!?"]'), ''));
+                                  String wordmean = await getword(story.translations, kelime.toLowerCase().replaceAll(RegExp(r'[.,!?"]'), ''));
                                   print("kelimenin anlamı $wordmean ");
                                   showDialog(
                                     context: context,
@@ -72,7 +72,7 @@ class StoryWidget extends StatelessWidget {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            kelime.replaceAll(RegExp(r'[.,!?"]'), ''),style: TextStyle(fontSize: 20,color: Colors.red, fontWeight: FontWeight.bold),
+                                            kelime.replaceAll(RegExp(r'[.,!?"]'), '' ),style: TextStyle(fontSize: 20,color: Colors.red, fontWeight: FontWeight.bold),
                                           ),
                                           Text('    -    '),
                                           Text(
@@ -177,6 +177,8 @@ class StoryWidget extends StatelessWidget {
                     Provider.of<ReadingProvider>(context, listen: false).eitherFailureOrStory();
 
 
+
+
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -204,9 +206,9 @@ class StoryWidget extends StatelessWidget {
             ] else ...[
               const Expanded(
                 child: Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.white,
-                    color: Colors.orangeAccent,
+                  child:  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.cyanAccent),
+                    strokeWidth: 8,
                   ),
                 ),
               ),

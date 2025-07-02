@@ -4,9 +4,11 @@ import 'package:provider/provider.dart';
 
 import 'package:speezy_mobile/providers/theme_provider.dart';
 import 'package:speezy_mobile/reading/presentation/providers/reading_provider.dart';
+import 'package:speezy_mobile/rolegame/presentation/providers/role_provider.dart';
 import 'package:speezy_mobile/services/auth_service.dart';
 import 'package:speezy_mobile/services/shared_preferences_service.dart';
 import 'package:speezy_mobile/services/storage_service.dart';
+import 'package:speezy_mobile/wordgame/presentation/providers/word_provider.dart';
 import 'routes/app_router.dart';
 import 'viewmodels/auth_viewmodel.dart';
 
@@ -37,6 +39,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => SharedPreferencesService()),
         ChangeNotifierProvider(create: (_) => ReadingProvider()),
+
+        ChangeNotifierProvider(create: (_) => RoleProvider()),
+
 
         ChangeNotifierProvider(
           create: (context) {

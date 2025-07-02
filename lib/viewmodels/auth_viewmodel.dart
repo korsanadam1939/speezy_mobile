@@ -57,6 +57,9 @@ class AuthViewModel extends ChangeNotifier {
 
 
 
+
+
+
   Future<ErrorModel?> register({required String username,required String email, required String password}) async{
     isLoading =true;
     notifyListeners();
@@ -113,6 +116,13 @@ class AuthViewModel extends ChangeNotifier {
 
 
 }
+  Future<void> changeProfile(String url) async {
+    if (_user != null ) {
+      _user!.profilePictureUrl = url;
+      notifyListeners();
+    }
+  }
+
 
 
 

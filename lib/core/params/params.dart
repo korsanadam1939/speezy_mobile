@@ -6,3 +6,24 @@ class ReadingParams {
   ReadingParams(this.story);
 }
 
+class WordParams {
+  List<dynamic> words;
+
+
+  WordParams(this.words,);
+}
+
+class RoleParams {
+  String senorio;
+
+  RoleParams(this.senorio);
+
+
+}
+
+class RoleAnswerParams{
+
+}
+
+
+

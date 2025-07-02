@@ -1,11 +1,13 @@
 import 'package:go_router/go_router.dart';
+import 'package:speezy_mobile/rolegame/presentation/pages/role_page.dart';
 import 'package:speezy_mobile/views/login/forgetpassword.dart';
 import 'package:speezy_mobile/views/login/resetpassword.dart';
 import 'package:speezy_mobile/views/pages/game.dart';
 import 'package:speezy_mobile/views/pages/home.dart';
 import 'package:speezy_mobile/widgets/bottombor.dart';
 import 'package:speezy_mobile/views/login/register.dart';
-import 'package:speezy_mobile/views/profile.dart';
+import 'package:speezy_mobile/views/pages/profile.dart';
+import 'package:speezy_mobile/wordgame/presentation/pages/word_page.dart';
 import '../reading/presentation/pages/reading_page.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../views/login/login.dart';
@@ -43,7 +45,7 @@ GoRouter createRouter(AuthViewModel authViewModel) {
       ),
       GoRoute(
         path: '/profile',
-        builder: (context, state) => const profile(),
+        builder: (context, state) => const Profile(),
       ),
       GoRoute(
         path: '/home',
@@ -64,6 +66,14 @@ GoRouter createRouter(AuthViewModel authViewModel) {
       GoRoute(
         path: '/reading',
         builder: (context, state) => const ReadingPage(),
+      ),
+      GoRoute(
+        path: '/wordgame',
+        builder: (context, state) => WordPage(),
+      ),
+      GoRoute(
+        path: '/rolegame',
+        builder: (context, state) => RolePage(),
       ),
 
     ],

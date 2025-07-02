@@ -30,7 +30,7 @@ class ReadingRepositoryImpl implements ReadingRepository {
             await remoteDataSource.getStory(readingParams: readingParams);
         //print(remoteStory.words);
 
-        localDataSource.cacheStory(storyToCache: remoteStory);
+        await localDataSource.cacheStory(storyToCache: remoteStory);
 
         return Right(remoteStory);
       } on ServerException {

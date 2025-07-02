@@ -23,12 +23,47 @@ class _HomeState extends State<Home> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              appBar( authViewModel.user!),
+              appBar(authViewModel.user!),
               featuredCard(),
-              SizedBox(height: 32),
-              quickActionsSection(),
-              SizedBox(height: 32),
-              progress(),
+              SizedBox(height: 5),
+              buildCard(
+                color: Colors.indigo,
+                icon: Icons.videogame_asset,
+                title: "Kelime oyunu",
+                subtitle: "yakında....",
+                progress: 60,
+                onTap: () {
+                  context.push('/wordgame');
+                },
+              ),
+              buildCard(
+                color: Colors.green,
+                icon: Icons.menu_book,
+                title: "Hikaye oku",
+                subtitle: "ingilizce hikaye oku ve inglizceni geliştir",
+                progress: 40,
+                onTap: () {
+                  context.push('/reading');
+                },
+              ),
+              buildCard(
+                color: Colors.deepOrange,
+                icon: Icons.edit,
+                title: "Role oyunu",
+                subtitle: "geldi ...",
+                progress: 80,
+                onTap: () {
+                  context.push("/rolegame");
+                },
+              ),
+              buildCard(
+                color: Colors.grey,
+                icon: Icons.mic,
+                title: "Speaking Practice",
+                subtitle: "Practice speaking",
+                progress: 50,
+                onTap: () {},
+              ),
             ],
           ),
         ),
@@ -78,69 +113,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildProgressItem(
-      String title,
-      String progress,
-      double value,
-      Color color,
-      ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-            Text(
-              progress,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-            ),
-          ],
-        ),
-        SizedBox(height: 8),
-        Container(
-          height: 8,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade500,
-                blurRadius: 15,
-                offset: const Offset(4, 4),
-              ),
-              BoxShadow(
-                color: Colors.white,
-                blurRadius: 15,
-                offset: const Offset(-4, -4),
-              ),
-            ],
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: FractionallySizedBox(
-            alignment: Alignment.centerLeft,
-            widthFactor: value,
-            child: Container(
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  appBar(
-      User user
-      ) {
+  appBar(User user) {
     return Padding(
       padding: EdgeInsets.all(20),
       child: Row(
@@ -189,7 +162,7 @@ class _HomeState extends State<Home> {
 
   featuredCard() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 15),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -267,12 +240,12 @@ class _HomeState extends State<Home> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 5),
                   Text(
                     'Telaffuzunuzu ve hızınızı artırmak için sesli okuma ile eşlik edin',
                     style: TextStyle(color: Colors.white70, fontSize: 15),
                   ),
-                  SizedBox(height: 24), // Spacer yerine bu
+                  SizedBox(height: 20), // Spacer yerine bu
                   Row(
                     children: [
                       Text(
@@ -295,89 +268,96 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
 
-
-  quickActionsSection() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Hızlı İşlemler',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
+Widget buildCard({
+  VoidCallback? onTap,
+  required Color color,
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required int progress,
+}) {
+  return Opacity(
+    opacity: 1,
+    child: InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 5),
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF8E2DE2),
+                Color(0xFF4A00E0 ),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+
+            borderRadius: BorderRadius.circular(16),
           ),
-          SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GestureDetector(
-                onTap:(){
-                  context.push('/reading');
-                },
-                child: _buildActionButton(
-                  icon: Icons.menu_book,
-                  label: 'Günlük okuma',
-                  color: Colors.blue,
-                ),
-              ),
-              _buildActionButton(
-                icon: Icons.bookmark,
-                label: 'kelime öğren',
-                color: Colors.grey[600]!,
-              ),
-              _buildActionButton(
-                icon: Icons.quiz,
-                label: 'hızlı quiz',
-                color: Colors.orange,
-              ),
-              _buildActionButton(
-                icon: Iconsax.task,
-                label: 'görevler',
-                color: Colors.green,
+              Icon(icon, size: 40, color: Colors.white),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(subtitle, style: TextStyle(color: Colors.white70)),
+                        SizedBox(height: 15),
+                        Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Progress",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  '$progress',
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            LinearProgressIndicator(
+                              value: progress.toDouble(),
+                              color: Colors.white,
+                              backgroundColor: Colors.white24,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
-    );
-  }
-
-  progress() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'İlerlemem',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-          SizedBox(height: 20),
-          _buildProgressItem(
-            'Reading Goal',
-            '15/30 pages',
-            15 / 30,
-            Colors.blue,
-          ),
-          SizedBox(height: 16),
-          _buildProgressItem(
-            'Vocabulary',
-            '22/25 words',
-            22 / 25,
-            Colors.blue,
-          ),
-        ],
-      ),
-    );
-  }
-
+    ),
+  );
 }

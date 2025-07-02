@@ -4,7 +4,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:speezy_mobile/views/login/login.dart';
 import 'package:speezy_mobile/views/pages/game.dart';
 import 'package:speezy_mobile/views/pages/home.dart';
-import 'package:speezy_mobile/views/profile.dart';
+import 'package:speezy_mobile/views/pages/profile.dart';
 
 class bottombor extends StatefulWidget {
   const bottombor({super.key});
@@ -21,7 +21,7 @@ class _bottomborState extends State<bottombor> {
     Home(),
     Gamescreen(),
 
-    profile(),
+    Profile(),
   ];
 
   @override

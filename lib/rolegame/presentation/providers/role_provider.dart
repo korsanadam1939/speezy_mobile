@@ -8,29 +8,31 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/connection/network_info.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/params/params.dart';
-import '../../business/entities/ReadingEntity.dart';
+import '../../business/entities/RoleEntity.dart';
 import '../../business/usecases/get_story.dart';
-import '../../data/datasources/reading_local_data_source.dart';
-import '../../data/datasources/reading_remote_data_source.dart';
-import '../../data/repositories/reading_repository_impl.dart';
+import '../../data/datasources/role_local_data_source.dart';
+import '../../data/datasources/role_remote_data_source.dart';
+import '../../data/repositories/role_repository_impl.dart';
 
-class ReadingProvider extends ChangeNotifier {
-  ReadingEntity? story;
+class RoleProvider extends ChangeNotifier {
+  RoleEntity? role;
   Failure? failure;
 
-  ReadingProvider({
-    this.story,
+  RoleProvider({
+    this.role,
     this.failure,
   });
 
-  void eitherFailureOrStory() async {
-    story =null;
+  void eitherFailureOrRole() async {
+
+    role = null;
     notifyListeners();
-    ReadingRepositoryImpl repository = ReadingRepositoryImpl(
-      remoteDataSource: ReadingRemoteDataSourceImpl(
+
+    RoleRepositoryImpl repository = RoleRepositoryImpl(
+      remoteDataSource: RoleRemoteDataSourceImpl(
         dio: Dio(),
       ),
-      localDataSource: ReadingLocalDataSourceImpl(
+      localDataSource: RoleLocalDataSourceImpl(
         sharedPreferences: await SharedPreferences.getInstance(),
 
       ),
@@ -39,18 +41,18 @@ class ReadingProvider extends ChangeNotifier {
       ),
     );
 
-    final failureOrStory = await GetStory(readingRepository: repository).call(
-      readingParams: ReadingParams(story?.story ?? "hikaye yok"),
+    final failureOrRole = await GetRole(roleRepository: repository).call(
+      roleParams: RoleParams(role?.senorio ?? "senori bulunamadı")
     );
 
-    failureOrStory.fold(
+    failureOrRole.fold(
       (Failure newFailure) {
-        story = null;
+        role = null;
         failure = newFailure;
         notifyListeners();
       },
-      (ReadingEntity newStory) {
-        story = newStory;
+      (RoleEntity newRole) {
+        role = newRole;
         failure = null;
         notifyListeners();
       },
