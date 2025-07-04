@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:speezy_mobile/roleanswer/presentation/providers/answer_provider.dart';
+import 'package:speezy_mobile/roleanswer/presentation/widgets/answerWidget.dart';
+import 'package:speezy_mobile/widgets/Alertdialog.dart';
+import 'package:speezy_mobile/widgets/Loading_widget.dart';
 
 import '../../../core/errors/failure.dart';
 import '../../business/entities/RoleEntity.dart';
@@ -184,7 +188,7 @@ class OrangeCard extends StatelessWidget {
   Future<String> getword(Map<String,String> words,String wordinput) async {
     for (var word in words.entries) {
       print("${word.key} : ${word.value}");
-      if(word.key ==wordinput ){
+      if(word.key.toLowerCase() ==wordinput.toLowerCase() ){
         return word.value;
 
       }
@@ -198,9 +202,11 @@ class OrangeCard extends StatelessWidget {
 class MesajCard extends StatelessWidget {
   String roleemoji;
   String yourtask;
+  TextEditingController tfanswer;
+  final VoidCallback onPressed;
 
 
-   MesajCard(this.roleemoji,this.yourtask);
+   MesajCard(this.roleemoji,this.yourtask,this.tfanswer,this.onPressed);
 
    @override
   Widget build(BuildContext context) {
@@ -254,15 +260,14 @@ class MesajCard extends StatelessWidget {
               border: Border.all(color: AppColors.grey.withOpacity(0.3)),
             ),
             child: TextField(
+              controller: tfanswer,
               decoration: InputDecoration(
                 hintText: AppStrings.exampleAnswer,
                 hintStyle: TextStyle(color: AppColors.hintColor),
                 border: InputBorder.none,
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.send, color: AppColors.blueAccent),
-                  onPressed: () {
-                    print('Send button pressed!');
-                  },
+                  onPressed: onPressed
                 ),
               ),
               maxLines: null,
@@ -416,6 +421,7 @@ class RolePage extends StatefulWidget {
 }
 
 class _RolePageState extends State<RolePage> {
+  var tfanswer = TextEditingController();
 
 
 
@@ -456,41 +462,72 @@ class _RolePageState extends State<RolePage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            if(role != null) ...[
-              OrangeCard(title: role!.title,senorio: role.senorio,titleemoji: role.title_emoji,roleemoji: role.role_emoji,translations: role.translations,),
-              // Avatar and "Senaryo karakterin ile konuş!" text (Image is part of MesajCard now)
-              // The image in the provided designs is between the scenario card and the input field.
-              // I'll place it inside the MesajCard for better encapsulation as it relates directly to the chat.
-              MesajCard(role.role_emoji,role.your_task),
-              YeniRolButon(
-                text: AppStrings.generateNewRole,
-                icon: Icons.refresh, // Using refresh icon for "Yeni Rol Üret"
-                onPressed: () {
-                  // Logic for generating a new role
-                  print('Yeni Rol Üret button pressed!');
-                  print(role.your_task);
+        child: Center(
+          child: Column(
+            children: [
+              if(role != null) ...[
+                OrangeCard(title: role!.title,senorio: role.senorio,titleemoji: role.title_emoji,roleemoji: role.role_emoji,translations: role.translations,),
+                // Avatar and "Senaryo karakterin ile konuş!" text (Image is part of MesajCard now)
+                // The image in the provided designs is between the scenario card and the input field.
+                // I'll place it inside the MesajCard for better encapsulation as it relates directly to the chat.
+                MesajCard(role.role_emoji,role.your_task,tfanswer,(){
+                  print("basıldı");
+                  Future.microtask(() {
+                    Provider.of<AnswerProvider>(context, listen: false).eitherFailureOrAnswer(tfanswer.text);
+                  });
 
-                },
-              ),
-              const Ipuclari(),
-              const SizedBox(height: 20.0),
-            ] else if(failure != null) ...[
-              Text("hata")
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: SingleChildScrollView(child: AnswerWidget(tfanswer.text)),
+                      actions: [
 
-            ] else ...[
-               Center(
-                 child: CircularProgressIndicator(
-                   color: Colors.blue,
-                 ),
-               )
+                        TextButton(
+                          child: Text('Tamam'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
 
-            ]
-
+                          },
+                        ),
+                      ],
+                    ),
+                  );
 
 
-          ],
+                }),
+                YeniRolButon(
+                  text: AppStrings.generateNewRole,
+                  icon: Icons.refresh, // Using refresh icon for "Yeni Rol Üret"
+                  onPressed: () {
+                    // Logic for generating a new role
+                    print('Yeni Rol Üret button pressed!');
+                    print(role.your_task);
+                    Future.microtask(() {
+                      Provider.of<RoleProvider>(context, listen: false).eitherFailureOrRole();
+                    });
+
+
+                  },
+                ),
+                const Ipuclari(),
+                const SizedBox(height: 20.0),
+              ] else if(failure != null) ...[
+                Text("hata")
+
+              ] else ...[
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  child: Center(
+                    child: LoadingWidget(),
+                  ),
+                ),
+
+              ]
+
+
+
+            ],
+          ),
         ),
       ),
     );

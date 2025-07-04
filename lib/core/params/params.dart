@@ -22,6 +22,9 @@ class RoleParams {
 }
 
 class RoleAnswerParams{
+  String answer;
+
+  RoleAnswerParams(this.answer);
 
 }
 

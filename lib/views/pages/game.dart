@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:speezy_mobile/widgets/Builditem.dart';
 import 'package:speezy_mobile/widgets/gosterge.dart';
 
 
@@ -21,7 +23,7 @@ class _GamescreenState extends State<Gamescreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text("Oyna",style: TextStyle(color: Colors.black,fontSize: 24,fontWeight: FontWeight.bold),),
-        centerTitle: true,
+        centerTitle: true ,
 
 
       ),
@@ -30,40 +32,12 @@ class _GamescreenState extends State<Gamescreen> {
 
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 15 ,right: 15,left: 15),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(18),
-                child: Image.asset(
-                  'assets/images/read.png',
-
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 15,right: 15,left: 15),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(18),
-                child: Image.asset(
-                  'assets/images/wordgameimage.png',
-
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          )
-
-
+          Builditem( Icons.videogame_asset, "Role oyunu", "zor şartlarda ingilizce konuşmayı öğren", 60,(){
+            context.push("/rolegame");
+          }),
+          Builditem( Icons.menu_book, "Hikaye Okuma", "Telafuzunu ve okuma akıçılığını geliştir", 60,(){
+            context.push("/reading");
+          })
 
 
         ],

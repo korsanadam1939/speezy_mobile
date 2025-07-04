@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../widgets/Loading_widget.dart';
 import '../../business/entities/ReadingEntity.dart';
 import '../providers/reading_provider.dart';
 import '../../../core/errors/failure.dart';
@@ -204,12 +205,10 @@ class StoryWidget extends StatelessWidget {
                 ),
               ),
             ] else ...[
-              const Expanded(
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.7,
                 child: Center(
-                  child:  CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.cyanAccent),
-                    strokeWidth: 8,
-                  ),
+                  child: LoadingWidget(),
                 ),
               ),
             ],

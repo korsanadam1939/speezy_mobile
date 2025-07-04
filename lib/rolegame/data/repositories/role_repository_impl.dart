@@ -8,7 +8,7 @@ import '../../business/repositories/RoleRepository.dart';
 import '../datasources/role_local_data_source.dart';
 import '../datasources/role_remote_data_source.dart';
 import '../models/role_model.dart';
-
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 class RoleRepositoryImpl implements RoleRepository {
   final RoleRemoteDataSource remoteDataSource;
   final RoleLocalDataSource localDataSource;
@@ -37,6 +37,8 @@ class RoleRepositoryImpl implements RoleRepository {
         return Left(ServerFailure(errorMessage: 'This is a server exception'));
       }
     } else {
+
+
       print("internet yok");
       try {
         RoleModel localRole = await localDataSource.getLastRole();

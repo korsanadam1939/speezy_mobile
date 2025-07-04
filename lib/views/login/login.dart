@@ -44,7 +44,7 @@ class LoginScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Giriş yap',
+                      "Giriş  yap",
                       style: Theme.of(
                         context,
                       ).textTheme.headlineSmall?.copyWith(
